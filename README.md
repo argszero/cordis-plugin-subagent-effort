@@ -2,6 +2,17 @@
 
 Per-delegation reasoning effort for [deepseek-harness](https://github.com/deepseek-ai/deepseek-harness) (`dsh`) subagents.
 
+> ## ⚠️ Superseded upstream (0.1.2-alpha.1, 2026-08-28)
+>
+> deepseek-harness **0.1.2-alpha.1 fixed this gap natively**: `AgentOptions` now
+> carries `reasoningEffort` (consumed by the agent-loop request builder), and
+> `dsh-tool-subagent` exposes a per-call `reasoning_effort` parameter plus
+> background/continuable delegation. This plugin is **not needed on
+> ≥ 0.1.2-alpha.1** and is kept for users pinned to `0.1.1-rc.2`, where the
+> silent-drop gap still exists. See
+> [discussion #4666](https://github.com/deepseek-ai/deepseek-harness/discussions/4666)
+> for the maintainer-confirmed root cause and the upstream fix.
+
 Closes one gap end to end: `@deepseek-ai/dsh-tool-subagent` accepts config-level
 `agentOptions` and forwards them into the child's `AgentOptions`, but the agent
 loop's request builder only reads `provider` / `model` / `maxTokens` from
