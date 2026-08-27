@@ -1,0 +1,13 @@
+# The @argszero/cordis-plugin-subagent-effort bundle patch: one insert row
+# mounting the plugin under its own id. The provider name is deployment
+# specific (e.g. `spawn`, `fork`, `acp`), so this patch carries no config;
+# set `config.provider` in your own profile layer (last write wins per row):
+#
+#   - set:
+#       - id: subagent-effort
+#         config:
+#           provider: spawn
+
+- insert:
+    - id: subagent-effort
+      name: '@argszero/cordis-plugin-subagent-effort'
