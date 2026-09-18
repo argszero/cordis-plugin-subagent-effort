@@ -100,13 +100,49 @@ Optional `model` overrides the child's model for that delegation.
 - Foreground-only by design — background/continuable delegation is available
   from the built-in `subagent` tool; this plugin is about effort control.
 
+## Peer range
+
+This plugin targets one dsh line, and declares every harness package it reads as
+a **peer** rather than a dependency:
+
+```
+>=0.1.1-rc.2 <0.1.2
+```
+
+declared identically on `@deepseek-ai/dsh-agent`, `@deepseek-ai/dsh-llm`,
+`@deepseek-ai/dsh-session`, `@deepseek-ai/dsh-subagent` and
+`@deepseek-ai/dsh-tools`. It admits exactly `0.1.1-rc.2`.
+
+The narrow scope is deliberate: upstream closed this gap natively in
+**0.1.2-alpha.1** (`AgentOptions.reasoningEffort` is consumed from there), so the
+plugin is only meaningful on the line where the silent drop still exists.
+
+The *declaration* was the bug. v0.1.0 shipped these five as `dependencies` at
+`^0.1.1-rc.2`, and a caret on a prerelease admits only its own tuple — so no
+newer tree could satisfy it, and npm resolves an unsatisfiable *dependency* by
+nesting its own copy. Installing the published 0.1.0 into a project running dsh
+`0.1.6-alpha.2` produced:
+
+```
+node_modules/@argszero/cordis-plugin-subagent-effort/node_modules/@deepseek-ai/dsh-tools   (=0.1.1-rc.2)
+node_modules/@deepseek-ai/dsh-tools                                                        (=0.1.6-alpha.2)
+```
+
+Two copies of the harness runtime in one process, with no warning at all. As a
+**peer** the same narrow scope produces the correct outcome instead: npm refuses
+the install with `ERESOLVE`, which tells a user on a newer line that this plugin
+is not for them.
+
+`test/peer-range.spec.mjs` asserts the admitted set exactly, asserts that no
+harness package appears in `dependencies`, and asserts that this README quotes
+the manifest range verbatim.
+
 ## Development
 
 ```sh
 npm install
 npm run build        # tsc → lib/
-node smoke.mjs       # loads the plugin on a real Cordis context and verifies
-                     # tool registration, request injection, and option forwarding
+npm test             # tsc + node --test (peer-range / declaration guard)
 ```
 
 ## License
