@@ -33,8 +33,20 @@ adds a per-call effort tool.
 
 ## Install
 
+**Nothing to install on a harness at or above `0.1.2-alpha.1`.** The gap was fixed
+natively there, and `dsh` 0.2.1-rc.3's install gate refuses both shipped copies
+anyway — the registry `0.1.1` and the git head both declare
+`>=0.1.1-rc.2 <0.1.2` on every harness peer, so the gate reports *"Plugin
+@argszero/cordis-plugin-subagent-effort@0.1.1 is incompatible with dsh
+0.2.1-rc.3"* and installs nothing (measured 2026-10-25). **That refusal is the
+correct outcome, not a conflict to override** with `allow-version`: a package a
+later harness made unnecessary should not be granted an exemption onto it.
+
+Only a user pinned to `0.1.1-rc.2` — the line this plugin exists for — has a
+reason to install it:
+
 ```sh
-# add to your dsh profile (the dsh.bundle declaration mounts it as a profile layer)
+# dsh 0.1.1-rc.2 only (the dsh.bundle declaration mounts it as a profile layer)
 pnpm add @argszero/cordis-plugin-subagent-effort
 ```
 
