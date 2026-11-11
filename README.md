@@ -28,8 +28,16 @@ adds a per-call effort tool.
    `agentOptions.reasoningEffort`) now actually reaches the adapter.
 2. **Per-call tool** — registers `subagent_effort` (configurable), a foreground
    subagent tool accepting `reasoning_effort` (`off` | `low` | `high` | `max`,
-   the DeepSeek adapter vocabulary) and an optional `model` override per call,
-   forwarded as child `agentOptions`.
+   the DeepSeek adapter vocabulary — a **closed** set: the parameter's schema is
+   an `enum`, so any other spelling is rejected as an invalid argument rather
+   than silently ignored, which is the failure mode this plugin exists to
+   remove) and an optional `model` override per call, forwarded as child
+   `agentOptions`.
+
+These four are the DeepSeek adapter's levels, not `llm-pi-ai`'s
+`reasoningEfforts` key set — a different vocabulary for a different purpose,
+which at dsh `0.2.2-rc.2` is seven levels (`off`, `minimal`, `low`, `medium`,
+`high`, `xhigh`, `max`).
 
 ## Install
 
